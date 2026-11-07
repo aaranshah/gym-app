@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d12">
+  <title>GIF Beat Studio</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo" aria-hidden="true"></span>GIF Beat Studio</div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" class="tab active" data-tab="library" aria-selected="true">Library <span class="badge" id="libCount">0</span></button>
+      <button role="tab" class="tab" data-tab="editor" aria-selected="false">Beat Editor</button>
+    </nav>
+  </header>
+
+  <!-- ===================================================== LIBRARY -->
+  <main id="tab-library" class="tabpane active">
+    <section class="lib-toolbar">
+      <button class="btn primary" id="btnImport">+ Add GIFs</button>
+      <div class="seg" id="libGender">
+        <button data-v="all" class="on">All</button>
+        <button data-v="female">Female</button>
+        <button data-v="male">Male</button>
+        <button data-v="untagged">Untagged</button>
+      </div>
+      <input type="search" id="libSearch" class="input grow" placeholder="Search name or tag…">
+      <select id="libSort" class="input">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="name">Name A–Z</option>
+        <option value="random">Random</option>
+      </select>
+      <button class="btn icon" id="libShuffle" title="Shuffle">⤮</button>
+      <button class="btn" id="libSelectMode">Select</button>
+      <button class="btn" id="btnBackup" title="Backup / restore library">⋯</button>
+    </section>
+
+    <div class="lib-body">
+      <aside class="people" id="peopleList" aria-label="People"></aside>
+      <section class="lib-main">
+        <div class="lib-status" id="libStatus"></div>
+        <div class="grid" id="libGrid"></div>
+        <div id="libSentinel"></div>
+        <div class="empty" id="libEmpty" hidden>
+          <h2>Your GIF library is empty</h2>
+          <p>Drag &amp; drop GIFs (or a .zip of GIFs) anywhere on this page, or use <b>+ Add GIFs</b> to bulk-import from files, GIPHY search or a list of links.</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="bulkbar" id="bulkBar" hidden>
+      <span id="bulkCount">0 selected</span>
+      <button class="btn small" id="bulkAll">Select all shown</button>
+      <button class="btn small" id="bulkTag">Edit tags…</button>
+      <button class="btn small" id="bulkToEditor">Fill clips</button>
+      <button class="btn small danger" id="bulkDelete">Delete</button>
+      <button class="btn small" id="bulkDone">Done</button>
+    </div>
+  </main>
+
+  <!-- ===================================================== EDITOR -->
+  <main id="tab-editor" class="tabpane">
+    <div class="editor">
+      <div class="ed-main">
+        <!-- 1. Sound -->
+        <section class="card" id="soundCard">
+          <div class="card-h"><span class="step">1</span><h3>Sound</h3><div class="spacer"></div>
+            <button class="btn small" id="btnDownloadAudio" hidden>Download audio (.wav)</button>
+            <button class="btn small" id="btnReplaceAudio" hidden>Replace</button>
+          </div>
+          <label class="drop" id="audioDrop">
+            <input type="file" id="audioInput" accept="audio/*,video/*,.mp3,.m4a,.aac,.wav,.ogg,.mp4,.mov,.webm" hidden>
+            <strong>Drop a TikTok sound or video here</strong>
+            <span>MP3, M4A, WAV, MP4, MOV… The audio is extracted automatically.</span>
+          </label>
+          <div class="sound-info" id="soundInfo" hidden></div>
+        </section>
+
+        <!-- 2. Beats -->
+        <section class="card" id="beatsCard" hidden>
+          <div class="card-h"><span class="step">2</span><h3>Beats</h3><div class="spacer"></div>
+            <span class="muted" id="bpmLabel"></span>
+          </div>
+          <div class="controls">
+            <div class="ctl">
+              <label>Detect</label>
+              <div class="seg" id="beatMode">
+                <button data-v="beats" class="on" title="Steady beat grid (like CapCut Beat 1/2)">Beats</button>
+                <button data-v="hits" title="Every strong hit / transient">Hits</button>
+              </div>
+            </div>
+            <div class="ctl" id="everyCtl">
+              <label>Cut every</label>
+              <div class="seg" id="beatEvery">
+                <button data-v="0.5">½</button>
+                <button data-v="1" class="on">1</button>
+                <button data-v="2">2</button>
+                <button data-v="4">4</button>
+              </div>
+              <span class="muted">beats</span>
+            </div>
+            <div class="ctl" id="sensCtl" hidden>
+              <label for="sens">Sensitivity</label>
+              <input type="range" id="sens" min="0" max="1" step="0.05" value="0.5">
+            </div>
+            <div class="ctl">
+              <label for="trimStart">Start</label>
+              <input type="number" class="input num" id="trimStart" min="0" step="0.01" value="0">
+              <label for="trimEnd">End</label>
+              <input type="number" class="input num" id="trimEnd" min="0" step="0.01" value="0">
+              <button class="btn small" id="btnTrimStartHere" title="Start the video at the playhead">Start here</button>
+              <button class="btn small" id="btnTrimEndHere" title="End the video at the playhead">End here</button>
+            </div>
+            <button class="btn small" id="btnRedetect">Re-detect</button>
+          </div>
+
+          <div class="wave-wrap" id="waveWrap">
+            <canvas id="wave" height="150"></canvas>
+          </div>
+          <div class="wave-tools">
+            <button class="btn small icon" id="btnPlay" title="Play / pause (Space)">▶</button>
+            <span class="mono" id="timeLabel">0:00.00</span>
+            <button class="btn small" id="btnAddCut" title="Add a cut at the playhead (B) — tap along while playing">+ Cut at playhead</button>
+            <button class="btn small" id="btnDelCut" title="Delete selected cut (Delete)" disabled>Delete cut</button>
+            <div class="spacer"></div>
+            <label class="muted" for="zoom">Zoom</label>
+            <input type="range" id="zoom" min="1" max="12" step="0.5" value="1">
+          </div>
+          <p class="hint">Click to move the playhead · double-click to add a cut · drag a cut to move it · press <kbd>B</kbd> while playing to tap cuts in time.</p>
+        </section>
+
+        <!-- 3. Clips -->
+        <section class="card" id="clipsCard" hidden>
+          <div class="card-h"><span class="step">3</span><h3>Clips <span class="muted" id="clipCount"></span></h3><div class="spacer"></div>
+            <button class="btn small" id="btnAutofill" title="Fill empty clips with random GIFs from the picker's filter">🎲 Fill empty</button>
+            <button class="btn small" id="btnShuffleAll" title="Re-roll every clip with random GIFs">Shuffle all</button>
+            <button class="btn small" id="btnClearAll">Clear</button>
+            <button class="btn small picker-toggle" id="btnOpenPicker">Pick GIFs</button>
+          </div>
+          <p class="hint">Tap a clip, then tap a GIF in the picker — it fills the clip and jumps to the next one. You can also drag GIFs onto clips.</p>
+          <div class="slots" id="slots"></div>
+        </section>
+      </div>
+
+      <!-- side column: preview + export, then picker -->
+      <div class="ed-side">
+        <section class="card preview-card" id="previewCard" hidden>
+          <div class="card-h"><span class="step">4</span><h3>Preview &amp; export</h3></div>
+          <div class="preview-stage"><canvas id="preview"></canvas></div>
+          <div class="export-opts">
+            <label>Format
+              <select id="optAspect" class="input">
+                <option value="9:16">9:16 TikTok / Reels</option>
+                <option value="1:1">1:1 Square</option>
+                <option value="4:5">4:5 Portrait</option>
+                <option value="16:9">16:9 Landscape</option>
+              </select>
+            </label>
+            <label>Quality
+              <select id="optRes" class="input">
+                <option value="1080">1080p</option>
+                <option value="720">720p (faster)</option>
+              </select>
+            </label>
+            <label>FPS
+              <select id="optFps" class="input">
+                <option value="30">30</option>
+                <option value="60">60</option>
+              </select>
+            </label>
+            <label>GIF fit
+              <select id="optFit" class="input">
+                <option value="cover">Fill (crop)</option>
+                <option value="contain">Fit (blur bg)</option>
+              </select>
+            </label>
+            <label>On each cut
+              <select id="optEffect" class="input">
+                <option value="none">Hard cut</option>
+                <option value="zoom">Zoom punch</option>
+                <option value="flash">Flash</option>
+              </select>
+            </label>
+          </div>
+          <button class="btn primary wide" id="btnExport">Export video</button>
+          <div class="export-progress" id="exportProgress" hidden>
+            <div class="bar"><div id="exportBar"></div></div>
+            <span id="exportLabel">Rendering…</span>
+            <button class="btn small" id="btnCancelExport">Cancel</button>
+          </div>
+          <div class="export-result" id="exportResult" hidden>
+            <video id="resultVideo" controls playsinline></video>
+            <div class="row">
+              <button class="btn primary" id="btnDownloadVideo">Download</button>
+              <button class="btn" id="btnShareVideo" hidden>Share / Save</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card picker" id="picker">
+          <div class="card-h">
+            <h3 id="pickerTitle">GIF picker</h3><div class="spacer"></div>
+            <button class="btn small picker-close" id="btnClosePicker">Done</button>
+          </div>
+          <div class="picker-filters">
+            <div class="seg small" id="pickGender">
+              <button data-v="all" class="on">All</button>
+              <button data-v="female">F</button>
+              <button data-v="male">M</button>
+            </div>
+            <select id="pickPerson" class="input"><option value="">Everyone</option></select>
+            <input type="search" id="pickSearch" class="input grow" placeholder="Search…">
+            <button class="btn small icon" id="pickShuffle" title="Shuffle">⤮</button>
+          </div>
+          <div class="grid small" id="pickGrid"></div>
+          <div id="pickSentinel"></div>
+          <div class="empty small" id="pickEmpty" hidden>No GIFs match. Add some in the Library tab.</div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================== DIALOGS -->
+  <dialog id="dlgImport" class="dlg wide">
+    <form method="dialog" class="dlg-h"><h3>Add GIFs</h3><button class="btn small icon" value="close" aria-label="Close">✕</button></form>
+    <div class="import-defaults">
+      <span class="muted">Tag everything imported here as:</span>
+      <input class="input" id="impName" placeholder="Name (e.g. person's name)" list="peopleNames">
+      <div class="seg small" id="impGender">
+        <button data-v="" class="on">—</button>
+        <button data-v="female">Female</button>
+        <button data-v="male">Male</button>
+      </div>
+      <input class="input" id="impTags" placeholder="tags, comma separated">
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" data-sub="files">Files</button>
+      <button class="subtab" data-sub="giphy">GIPHY search</button>
+      <button class="subtab" data-sub="urls">Links</button>
+    </div>
+    <div class="subpane active" data-sub="files">
+      <label class="drop big">
+        <input type="file" id="gifInput" multiple accept="image/gif,image/webp,image/png,image/jpeg,.gif,.zip" hidden>
+        <strong>Choose GIFs or a .zip of GIFs</strong>
+        <span>Or drag &amp; drop them here. Hundreds at once is fine. Duplicates are skipped.</span>
+      </label>
+      <label class="check"><input type="checkbox" id="impFolderNames"> Use the folder name inside a .zip as the person's name</label>
+    </div>
+    <div class="subpane" data-sub="giphy">
+      <div class="row">
+        <input class="input grow" id="giphyKey" placeholder="GIPHY API key (free at developers.giphy.com)">
+      </div>
+      <div class="row">
+        <input class="input grow" id="giphyQuery" placeholder="Search, e.g. a name, 'smile', 'model walk'">
+        <select class="input" id="giphyRating">
+          <option value="pg-13">PG-13</option>
+          <option value="r">R</option>
+          <option value="pg">PG</option>
+        </select>
+        <button class="btn primary" id="giphySearch">Search</button>
+      </div>
+      <div class="row muted small-text">
+        <span id="giphyStatus"></span><div class="spacer"></div>
+        <button class="btn small" id="giphySelectAll" disabled>Select all</button>
+        <button class="btn small primary" id="giphyImport" disabled>Import selected</button>
+      </div>
+      <div class="grid small" id="giphyGrid"></div>
+      <div class="row center"><button class="btn small" id="giphyMore" hidden>Load more</button></div>
+      <p class="muted small-text">Powered by GIPHY. Tip: put the search's subject in the Name box above so every result gets tagged.</p>
+    </div>
+    <div class="subpane" data-sub="urls">
+      <textarea class="input" id="urlList" rows="8" placeholder="Paste direct .gif links, one per line"></textarea>
+      <div class="row"><div class="spacer"></div><button class="btn primary" id="urlImport">Import links</button></div>
+      <p class="muted small-text">Some sites block downloads from other pages; if a link fails, save the GIF and add it as a file instead.</p>
+    </div>
+    <div class="import-progress" id="importProgress" hidden>
+      <div class="bar"><div id="importBar"></div></div><span id="importLabel"></span>
+    </div>
+  </dialog>
+
+  <dialog id="dlgItem" class="dlg">
+    <form method="dialog" class="dlg-h"><h3>GIF details</h3><button class="btn small icon" value="close" aria-label="Close">✕</button></form>
+    <div class="item-preview"><img id="itemImg" alt=""></div>
+    <div class="item-meta muted" id="itemMeta"></div>
+    <div class="form">
+      <label>Name <input class="input" id="itemName" list="peopleNames"></label>
+      <label>Gender
+        <div class="seg small" id="itemGender">
+          <button data-v="">—</button>
+          <button data-v="female">Female</button>
+          <button data-v="male">Male</button>
+        </div>
+      </label>
+      <label>Tags <input class="input" id="itemTags" placeholder="comma separated"></label>
+    </div>
+    <div class="row">
+      <button class="btn danger" id="itemDelete">Delete</button>
+      <div class="spacer"></div>
+      <button class="btn" id="itemUse">Use in active clip</button>
+      <button class="btn primary" id="itemSave">Save</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlgBulk" class="dlg">
+    <form method="dialog" class="dlg-h"><h3>Edit selected</h3><button class="btn small icon" value="close" aria-label="Close">✕</button></form>
+    <div class="form">
+      <label><input type="checkbox" id="bulkSetName"> Set name <input class="input" id="bulkName" list="peopleNames"></label>
+      <label><input type="checkbox" id="bulkSetGender"> Set gender
+        <div class="seg small" id="bulkGender">
+          <button data-v="" class="on">—</button>
+          <button data-v="female">Female</button>
+          <button data-v="male">Male</button>
+        </div>
+      </label>
+      <label>Add tags <input class="input" id="bulkTags" placeholder="comma separated"></label>
+    </div>
+    <div class="row"><div class="spacer"></div><button class="btn primary" id="bulkApply">Apply</button></div>
+  </dialog>
+
+  <dialog id="dlgBackup" class="dlg">
+    <form method="dialog" class="dlg-h"><h3>Backup &amp; restore</h3><button class="btn small icon" value="close" aria-label="Close">✕</button></form>
+    <p class="muted">Your library lives in this browser's storage. Export it as a .zip to keep a copy or move it to another device.</p>
+    <p class="muted" id="storageInfo"></p>
+    <div class="row">
+      <button class="btn primary" id="backupExport">Export library (.zip)</button>
+      <label class="btn">Import backup… <input type="file" id="backupInput" accept=".zip" hidden></label>
+    </div>
+    <div class="import-progress" id="backupProgress" hidden>
+      <div class="bar"><div id="backupBar"></div></div><span id="backupLabel"></span>
+    </div>
+  </dialog>
+
+  <datalist id="peopleNames"></datalist>
+  <div class="dropveil" id="dropVeil"><div>Drop GIFs to add them to your library</div></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
