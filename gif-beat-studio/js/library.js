@@ -1,11 +1,11 @@
 // Library tab: browse / filter / tag / import / backup.
-import { $, $$, el, toast, download, openDialog, debounce, fmtBytes } from './util.js';
+import { $, $$, el, toast, download, openDialog, debounce, fmtBytes, askConfirm, IN_ARTIFACT } from './util.js';
 import {
   library, onLibraryChange, query, people, addMany, updateItems, removeItems, reshuffle, fullUrl,
 } from './store.js';
 import { PagedGrid } from './grid.js';
 import { readZip, writeZip } from './zip.js';
-import { storageEstimate } from './db.js';
+import { storageEstimate, getBlob } from './db.js';
 
 const filter = { gender: 'all', person: '', search: '', sort: 'newest' };
 let selectMode = false;
@@ -116,7 +116,7 @@ function initItemDialog() {
     toast('Saved');
   };
   $('#itemDelete').onclick = async () => {
-    if (!confirm('Delete this GIF from your library?')) return;
+    if (!(await askConfirm('Delete this GIF from your library?', 'Delete', true))) return;
     await removeItems([dlg.dataset.id]);
     dlg.close();
   };
@@ -143,7 +143,7 @@ function initBulk() {
   };
   $('#bulkDelete').onclick = async () => {
     if (!selected.size) return;
-    if (!confirm(`Delete ${selected.size} GIFs from your library?`)) return;
+    if (!(await askConfirm(`Delete ${selected.size} GIFs from your library?`, 'Delete', true))) return;
     await removeItems([...selected]);
     selected.clear();
     updateBulkBar();
@@ -328,6 +328,8 @@ function giphyButtons() {
 function initImport() {
   const dlg = $('#dlgImport');
   $('#btnImport').onclick = () => openDialog(dlg);
+  // artifact network policy blocks GIPHY and other sites, so only offer file import there
+  if (IN_ARTIFACT) $$('.subtabs', dlg).forEach((x) => (x.hidden = true));
   bindSeg($('#impGender'));
   $$('.subtab', dlg).forEach((b) => (b.onclick = () => {
     $$('.subtab', dlg).forEach((x) => x.classList.toggle('active', x === b));
@@ -414,7 +416,6 @@ function initBackup() {
     openDialog($('#dlgBackup'));
   };
   $('#backupExport').onclick = async () => {
-    const { getBlob } = await import('./db.js');
     const files = [];
     const items = [];
     for (let i = 0; i < library.items.length; i++) {

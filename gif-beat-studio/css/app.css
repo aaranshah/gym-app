@@ -224,6 +224,8 @@ audio { width: 100%; }
   padding: 16px; width: min(520px, calc(100vw - 24px)); max-height: calc(100vh - 40px);
 }
 .dlg.wide { width: min(880px, calc(100vw - 24px)); }
+.dlg.narrow { width: min(380px, calc(100vw - 24px)); }
+.btn.danger-fill { background: var(--danger); border-color: var(--danger); }
 .dlg::backdrop { background: rgba(0, 0, 0, 0.6); }
 .dlg-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .import-defaults {

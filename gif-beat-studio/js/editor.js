@@ -1,5 +1,5 @@
 // Beat Editor tab: sound → beats → clips → preview/export.
-import { $, $$, el, toast, download, debounce, fmtTime, shuffle } from './util.js';
+import { $, $$, el, toast, download, debounce, fmtTime, shuffle, askConfirm, IN_ARTIFACT } from './util.js';
 import { library, onLibraryChange, query, people, thumbUrl, reshuffle } from './store.js';
 import { PagedGrid } from './grid.js';
 import { bindSeg, setSeg, segValue } from './library.js';
@@ -152,7 +152,7 @@ async function loadSound(file, { restore = false } = {}) {
 function showSound() {
   const has = !!rt.buffer;
   $('#audioDrop').hidden = has;
-  $('#btnDownloadAudio').hidden = !has;
+  $('#btnDownloadAudio').hidden = !has || IN_ARTIFACT;
   $('#btnReplaceAudio').hidden = !has;
   for (const id of ['#beatsCard', '#clipsCard', '#previewCard']) $(id).hidden = !has;
   if (!has) return;
@@ -676,7 +676,7 @@ function initPicker() {
 async function doExport() {
   if (!rt.buffer || rt.exporting) return;
   const empty = rt.segments.filter((_, i) => !validId(proj.assignments[i])).length;
-  if (empty && !confirm(`${empty} of ${rt.segments.length} clips have no GIF and will show as blank. Export anyway?\n\nTip: use "🎲 Fill empty" to fill them randomly.`)) return;
+  if (empty && !(await askConfirm(`${empty} of ${rt.segments.length} clips have no GIF yet and will show as blank. Tip: "🎲 Fill empty" fills them at random.`, 'Export anyway'))) return;
   stop();
   const { W, H } = exportDims();
   const fps = parseInt(proj.settings.fps, 10);
@@ -706,7 +706,7 @@ async function doExport() {
     v.src = URL.createObjectURL(blob);
     $('#exportResult').hidden = false;
     const file = new File([blob], fileName(), { type: blob.type });
-    $('#btnShareVideo').hidden = !(navigator.canShare && navigator.canShare({ files: [file] }));
+    $('#btnShareVideo').hidden = IN_ARTIFACT || !(navigator.canShare && navigator.canShare({ files: [file] }));
     toast(`Exported ${W}×${H} ${ext.toUpperCase()} in ${((performance.now() - t0) / 1000).toFixed(1)}s`);
   } catch (e) {
     if (e.name !== 'AbortError') {
@@ -825,8 +825,8 @@ export async function initEditor() {
 
   $('#btnAutofill').onclick = () => randomFill(false);
   $('#btnShuffleAll').onclick = () => randomFill(true);
-  $('#btnClearAll').onclick = () => {
-    if (!confirm('Remove all GIFs from the clips?')) return;
+  $('#btnClearAll').onclick = async () => {
+    if (!(await askConfirm('Remove all GIFs from the clips?', 'Clear', true))) return;
     proj.assignments = [];
     renderSlots();
     drawWave();
@@ -849,6 +849,7 @@ export async function initEditor() {
   $('#btnExport').onclick = doExport;
   $('#btnCancelExport').onclick = () => rt.exporting && rt.exporting.abort();
   $('#btnDownloadVideo').onclick = () => rt.resultBlob && download(rt.resultBlob, fileName());
+  if (IN_ARTIFACT) $('#btnDownloadVideo').textContent = 'Save video';
   $('#btnShareVideo').onclick = async () => {
     try {
       await navigator.share({ files: [new File([rt.resultBlob], fileName(), { type: rt.resultBlob.type })] });

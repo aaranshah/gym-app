@@ -72,3 +72,9 @@ vendor/vendor.js    bundled mediabunny (MPL-2.0) + gifuct-js (MIT)
 ## A note on content
 
 The app doesn't ship any GIFs: you build the library from GIFs you have, or from GIPHY's API. GIFs of real people taken from films and shoots are usually copyrighted, so keep that in mind before posting edits publicly.
+
+## Phone version (claude.ai artifact)
+
+`node tools/build-artifact.mjs` bundles everything into `dist/artifact.html`, a single self-contained page published as a claude.ai artifact so the app opens on a phone. Differences in that build:
+- **Save video** goes through the viewer's save prompt; in the Claude iOS app that's the share sheet, with *Save Video* to Photos.
+- Only file import (GIFs or .zip) is offered. The artifact's network policy blocks GIPHY and other sites, and WAV audio download isn't available.

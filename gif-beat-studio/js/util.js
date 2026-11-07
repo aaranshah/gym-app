@@ -51,13 +51,49 @@ export function toast(msg, kind = '') {
   toastTimer = setTimeout(() => (t.className = 'toast'), 3200);
 }
 
-export function download(blob, name) {
+/** True when running as a published claude.ai artifact (set by the artifact build). */
+export const IN_ARTIFACT = !!window.GBS_ARTIFACT;
+
+/**
+ * Save a file to the user's device. Inside a claude.ai artifact this goes through the
+ * viewer's `downloads` capability (a save prompt / the phone's share sheet); elsewhere it
+ * is a normal browser download.
+ */
+export async function download(blob, name) {
+  if (window.claude && typeof window.claude.use === 'function') {
+    const dl = await window.claude.use('downloads').catch(() => null);
+    if (dl) {
+      try {
+        await dl.save({ filename: name, data: blob });
+        toast('Saved');
+      } catch (e) {
+        if (e && e.code !== 'declined') toast(`Couldn't save: ${e.message || e.code}`, 'error');
+      }
+      return;
+    }
+    if (IN_ARTIFACT) {
+      toast('Saving files is not available in this view', 'error');
+      return;
+    }
+  }
   const url = URL.createObjectURL(blob);
   const a = el('a', { href: url, download: name });
   document.body.append(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+/** In-page yes/no question (window.confirm is blocked inside artifacts). */
+export function askConfirm(message, okLabel = 'OK', danger = false) {
+  const dlg = document.getElementById('dlgConfirm');
+  document.getElementById('confirmText').textContent = message;
+  const ok = document.getElementById('confirmOk');
+  ok.textContent = okLabel;
+  ok.classList.toggle('danger-fill', danger);
+  dlg.returnValue = '';
+  dlg.showModal();
+  return new Promise((r) => dlg.addEventListener('close', () => r(dlg.returnValue === 'ok'), { once: true }));
 }
 
 export function shuffle(arr) {
