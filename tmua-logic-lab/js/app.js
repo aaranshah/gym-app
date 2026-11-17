@@ -139,7 +139,7 @@
     if (b) { b.textContent = n ? String(n) : ''; b.hidden = !n; b.setAttribute('aria-label', n + ' due'); }
   }
 
-  function html(main, s) { main.innerHTML = s; return main; }
+  function html(main, s) { main.innerHTML = s; if (TLL.ink) TLL.ink.attach(main, 'screen-' + ((location.hash || '#home').slice(1) || 'home')); return main; }
   const pct = (x) => Math.round(x * 100) + '%';
   const fmtDate = (ts) => new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const fmtTime = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); };
@@ -427,6 +427,7 @@
       <button type="button" class="btn btn-quiet btn-small" data-end>End session</button></div>
       <h1 class="sr-only">${esc(s.title)}: question ${s.pos + 1}</h1>
       <p class="small muted">From: <a href="#lesson-${q.lesson}">${esc(lessonsById[q.lesson].title)}</a></p><div data-q></div></div>`);
+    if (TLL.ink) TLL.ink.setKey('question-' + q.id);
     main.querySelector('[data-end]').addEventListener('click', () => { s.pos = s.queue.length; runSession(main, s); });
     const qe = P.question(q, { mode: 'learn', ctx: s.ctx, drill: s.mode === 'drill', onAnswer: (r) => {
       s.results.push({ qid: q.id, ok: r.ok, hints: r.hints, gaveUp: r.gaveUp });
@@ -702,6 +703,7 @@
     function draw() {
       if (a.current === 'review') return drawReview();
       const q = mk.questions[a.current];
+      if (TLL.ink) TLL.ink.setKey(`mock-${mk.id}-${a.startedAt}-${q.id}`);
       body.innerHTML = `<div class="stack"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Question ${a.current + 1} <span class="muted small">of 20</span></h2>
         <button type="button" class="btn btn-small ${a.flags[q.id] ? 'flag-on' : ''}" data-flag aria-pressed="${a.flags[q.id] ? 'true' : 'false'}">${a.flags[q.id] ? '⚑ Flagged' : '⚐ Flag for review'}</button></div>
         <div data-q></div>

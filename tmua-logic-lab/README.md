@@ -36,7 +36,12 @@ browsers.) To use it on an iPad without a computer, host the folder on any stati
    Results give raw marks, per-code breakdown, timing, misconception patterns and next steps (no 1–9 conversion).
 7. **Progress** separates independent first attempts, assisted attempts and retries, and shows delayed retention,
    confidence calibration and the evidence behind each lesson’s mastery status.
-8. **More**: glossary, all worked examples, method and sources (evidence table, coverage map), settings, backup.
+8. **Write (Apple Pencil)**: the ✎ Write button on every screen turns on a handwriting layer. The pencil writes
+   over the page (pressure-sensitive pen in three colours, highlighter, stroke eraser, undo, clear, and “+ Space” for
+   blank working room); your finger still scrolls and taps, or switch on “Finger draws”. Each screen, practice
+   question and mock question keeps its own ink, saved on the device (IndexedDB, not included in backups). Press Done
+   to use the page normally again.
+9. **More**: glossary, all worked examples, method and sources (evidence table, coverage map), settings, backup.
 
 Progress is stored **on this device only** (browser localStorage). There is no account or cloud sync.
 Use **Settings → Export backup** (file or copyable text) and **Import** to move or protect it.
@@ -85,6 +90,7 @@ content/*.js          all course content as structured data with stable IDs (one
 js/model.js           normalises compact question types (shared with the validator)
 js/render.js          the single text + maths renderer (KaTeX, HTML + MathML)
 js/player.js          question player and worked-example viewer
+js/ink.js             Apple Pencil handwriting layer
 js/store.js, srs.js   local storage, export/import, spaced-review scheduler
 js/app.js             router, lessons, practice, review, mocks, progress, settings
 vendor/katex          KaTeX 0.16.11 (MIT), served locally
@@ -112,7 +118,8 @@ LaTeX or maths typed as plain text, and mock/practice overlap.
   force or direct calculation, all matching; a planted wrong key is detected. Finite searches support, but do not
   prove, universal claims; the written solutions carry the proofs. The remaining items are conceptual logic
   questions that were re-solved by hand.
-- `node tests/e2e.cjs`: 84 checks — diagnostic → recommendations; lesson flow; hints recorded separately; wrong
+- `node tests/e2e.cjs`: 94 checks (including pencil ink: pressure strokes, no accidental option selection, undo,
+  working space, per-question pages, persistence after reload) — diagnostic → recommendations; lesson flow; hints recorded separately; wrong
   answer → misconception, fresh question, card suggestion, delayed mistake queue; lesson resume after reload;
   flashcard attempt-before-reveal and scheduling; practice filters; mock with no hints, answers/flags surviving a
   reload, review screen, submission, correct scoring, solutions; timer expiry while away; accommodated pause;

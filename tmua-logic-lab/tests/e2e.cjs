@@ -229,6 +229,41 @@ const ok = (cond, msg) => { if (cond) { pass++; console.log('  ✓', msg); } els
   const order1 = await page.locator('.order-item .prose').allInnerTexts();
   ok(order0[0] === order1[1] && order0[1] === order1[0], 'Up button (keyboard) swaps steps');
 
+  console.log('Handwriting layer (Apple Pencil ink)');
+  await page.setViewportSize({ width: 1024, height: 1366 });
+  await page.evaluate(() => { TLL.store.state.settings.theme = 'system'; TLL.store.state.settings.size = 'm'; TLL.store.saveNow(); });
+  await go('practice-P121'); await page.waitForTimeout(300);
+  await page.click('[data-ink="on"]');
+  ok(await page.locator('.ink-tools').count() === 1, 'Write button opens the ink toolbar');
+  // simulate an Apple Pencil stroke across option A (pointerType "pen" with pressure)
+  await page.evaluate(() => {
+    const opt = document.querySelector('.opt'); const r = opt.getBoundingClientRect();
+    const ev = (type, x, y) => opt.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerType: 'pen', pressure: 0.6, clientX: x, clientY: y, pointerId: 7 }));
+    ev('pointerdown', r.left + 20, r.top + 20);
+    for (let i = 1; i < 20; i++) window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, cancelable: true, pointerType: 'pen', pressure: 0.5, clientX: r.left + 20 + i * 12, clientY: r.top + 20 + Math.sin(i) * 8, pointerId: 7 }));
+    window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'pen', pointerId: 7 }));
+    opt.click();
+  });
+  ok(await page.evaluate(() => TLL.ink.state.data.strokes.length === 1 && TLL.ink.state.data.strokes[0].p.length > 10), 'pencil stroke recorded with pressure points');
+  ok(!(await page.locator('.opt input').first().isChecked()), 'writing over an option does not select it');
+  ok(await page.evaluate(() => { const c = document.querySelector('.ink-canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < d.length; i += 4) if (d[i]) return true; return false; }), 'ink is drawn on the canvas');
+  // mouse drawing on desktop, then undo
+  const box = await page.locator('.q-stem').boundingBox();
+  await page.mouse.move(box.x + 10, box.y + 10); await page.mouse.down(); await page.mouse.move(box.x + 120, box.y + 30, { steps: 8 }); await page.mouse.up();
+  ok(await page.evaluate(() => TLL.ink.state.data.strokes.length === 2), 'mouse can write on desktop');
+  await page.click('[data-ink="undo"]');
+  ok(await page.evaluate(() => TLL.ink.state.data.strokes.length === 1), 'undo removes the last stroke');
+  await page.click('[data-ink="space"]');
+  ok(await page.evaluate(() => document.querySelector('.ink-space').offsetHeight >= 500), 'add space gives blank working room');
+  await page.waitForTimeout(500);
+  await page.reload(); await page.waitForTimeout(800);
+  ok(await page.evaluate(() => TLL.ink.state.data.strokes.length === 1 && TLL.ink.state.data.space >= 500), 'ink and working space are saved for this question after reload');
+  await go('practice-P122'); await page.waitForTimeout(400);
+  ok(await page.evaluate(() => TLL.ink.state.data.strokes.length === 0), 'a different question has its own clean page');
+  await page.click('[data-ink="on"]'); await page.click('[data-ink="off"]');
+  await page.locator('.opt').first().click();
+  ok(await page.locator('.opt input').first().isChecked(), 'after Done, tapping the page works normally');
+
   ok(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''));
   await browser.close(); server.close();
   console.log(`\n${pass} passed, ${fail} failed`);
