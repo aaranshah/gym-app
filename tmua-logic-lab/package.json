@@ -1,0 +1,14 @@
+{
+  "name": "tmua-logic-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TMUA Paper 2 logic and mathematical reasoning course: lessons, practice, spaced review and mock papers.",
+  "scripts": {
+    "start": "node scripts/serve.mjs 8080",
+    "validate": "node scripts/validate.mjs",
+    "verify": "node scripts/verify-maths.mjs",
+    "test": "node scripts/validate.mjs && node scripts/verify-maths.mjs && node tests/e2e.cjs",
+    "build:artifact": "node scripts/build-artifact.mjs"
+  },
+  "license": "UNLICENSED"
+}

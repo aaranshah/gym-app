@@ -1,0 +1,95 @@
+{
+  "counts": {
+    "units": 9,
+    "lessons": 31,
+    "workedExamples": 48,
+    "practiceQuestions": 157,
+    "diagnosticQuestions": 14,
+    "mockPapers": 3,
+    "mockQuestions": 60,
+    "flashcards": 50,
+    "glossary": 36,
+    "sources": 21,
+    "evidenceRows": 16,
+    "mathExpressions": 4757
+  },
+  "coverage": {
+    "Arg1": {
+      "lessons": 5,
+      "practice": 33,
+      "mock": 11
+    },
+    "Arg2": {
+      "lessons": 3,
+      "practice": 14,
+      "mock": 10
+    },
+    "Arg3": {
+      "lessons": 3,
+      "practice": 10,
+      "mock": 6
+    },
+    "Arg4": {
+      "lessons": 4,
+      "practice": 17,
+      "mock": 7
+    },
+    "Prf1": {
+      "lessons": 6,
+      "practice": 38,
+      "mock": 11
+    },
+    "Prf2": {
+      "lessons": 4,
+      "practice": 15,
+      "mock": 7
+    },
+    "Prf3": {
+      "lessons": 1,
+      "practice": 8,
+      "mock": 4
+    },
+    "Prf4": {
+      "lessons": 1,
+      "practice": 6,
+      "mock": 3
+    },
+    "Prf5": {
+      "lessons": 3,
+      "practice": 19,
+      "mock": 8
+    },
+    "Err1": {
+      "lessons": 3,
+      "practice": 14,
+      "mock": 5
+    },
+    "Err2": {
+      "lessons": 3,
+      "practice": 23,
+      "mock": 9
+    }
+  },
+  "byType": {
+    "mcq": 122,
+    "tfset": 10,
+    "roman": 15,
+    "ns": 6,
+    "order": 4
+  },
+  "byDiff": {
+    "1": 44,
+    "2": 71,
+    "3": 39,
+    "4": 3
+  },
+  "errors": [],
+  "warnings": [
+    "R3.steps[0].body: possible slash fraction in maths \"x^{1/n} = \\sqrt[n]{x}\"",
+    "P535.sol: possible slash fraction in maths \"2^{p/q} = 3\"",
+    "P535.hints[0]: possible slash fraction in maths \"2^{p/q} = 3\"",
+    "Mock M2-01 somewhat similar to practice P322 (0.50)",
+    "Mock M3-04 somewhat similar to practice P322 (0.44)",
+    "Mock M3-12 somewhat similar to practice P807 (0.43)"
+  ]
+}
