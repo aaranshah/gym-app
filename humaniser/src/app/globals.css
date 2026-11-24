@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens. Warm "paper and ink" neutrals with a single deep
+   green accent; semantic colours for diff and verification states.
+   ------------------------------------------------------------------ */
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-2: #faf9f6;
+  --sunken: #efede7;
+  --ink: #1b1a17;
+  --ink-2: #45433e;
+  --muted: #76726a;
+  --faint: #a29e95;
+  --line: #e5e2da;
+  --line-strong: #d4d0c6;
+  --accent: #1f6b57;
+  --accent-hover: #185a49;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3efe9;
+  --ins-bg: #dcefe5;
+  --ins-ink: #134e3e;
+  --del-ink: #9a3b2e;
+  --del-bg: #f8e6e1;
+  --warn: #9a6a12;
+  --warn-soft: #fbf0d9;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --ok: #1f6b57;
+  --focus: #2c7a65;
+  --shadow-sm: 0 1px 2px rgb(27 26 23 / 0.05);
+  --shadow-md: 0 1px 2px rgb(27 26 23 / 0.04), 0 8px 24px -8px rgb(27 26 23 / 0.14);
+  --shadow-lg: 0 2px 4px rgb(27 26 23 / 0.04), 0 24px 48px -12px rgb(27 26 23 / 0.22);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121211;
+    --surface: #1a1a18;
+    --surface-2: #1e1e1b;
+    --sunken: #151514;
+    --ink: #edebe5;
+    --ink-2: #c9c6bd;
+    --muted: #9a968c;
+    --faint: #6d6a62;
+    --line: #2b2a27;
+    --line-strong: #3a3935;
+    --accent: #5cc0a3;
+    --accent-hover: #74ceb3;
+    --accent-ink: #0d1f19;
+    --accent-soft: #1b2f28;
+    --ins-bg: #1d3a30;
+    --ins-ink: #a6e3cf;
+    --del-ink: #f0a596;
+    --del-bg: #3a2320;
+    --warn: #e5b45a;
+    --warn-soft: #33291a;
+    --danger: #f2877b;
+    --danger-soft: #3a1f1c;
+    --ok: #5cc0a3;
+    --focus: #74ceb3;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 2px 4px rgb(0 0 0 / 0.3), 0 24px 48px -12px rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121211;
+  --surface: #1a1a18;
+  --surface-2: #1e1e1b;
+  --sunken: #151514;
+  --ink: #edebe5;
+  --ink-2: #c9c6bd;
+  --muted: #9a968c;
+  --faint: #6d6a62;
+  --line: #2b2a27;
+  --line-strong: #3a3935;
+  --accent: #5cc0a3;
+  --accent-hover: #74ceb3;
+  --accent-ink: #0d1f19;
+  --accent-soft: #1b2f28;
+  --ins-bg: #1d3a30;
+  --ins-ink: #a6e3cf;
+  --del-ink: #f0a596;
+  --del-bg: #3a2320;
+  --warn: #e5b45a;
+  --warn-soft: #33291a;
+  --danger: #f2877b;
+  --danger-soft: #3a1f1c;
+  --ok: #5cc0a3;
+  --focus: #74ceb3;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 0.3), 0 24px 48px -12px rgb(0 0 0 / 0.6);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-text), ui-serif, Georgia, serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus: always visible for keyboard users, never for mouse clicks. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.focus-inset:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Writing surfaces */
+.prose-text {
+  font-family: var(--font-text), ui-serif, Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  letter-spacing: 0.002em;
+  color: var(--ink);
+  font-optical-sizing: auto;
+}
+.prose-text::placeholder {
+  color: var(--faint);
+}
+
+/* Diff marks */
+.diff-ins {
+  background: var(--ins-bg);
+  color: var(--ins-ink);
+  border-radius: 3px;
+  padding: 0 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.diff-del {
+  color: var(--del-ink);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--del-ink) 60%, transparent);
+  opacity: 0.85;
+}
+
+/* Clickable sentences in the output */
+.sentence {
+  border-radius: 4px;
+  transition: background-color 120ms ease;
+  cursor: pointer;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.sentence:hover {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+.sentence[data-active="true"] {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Streaming caret */
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.18em;
+  background: var(--accent);
+  animation: blink 1s steps(2, start) infinite;
+}
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fade-up {
+  animation: fade-up 180ms ease-out both;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--sunken) 25%, var(--line) 37%, var(--sunken) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Thin, unobtrusive scrollbars inside panels */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+select {
+  background-image: none;
+}
