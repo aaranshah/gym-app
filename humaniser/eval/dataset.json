@@ -1,0 +1,142 @@
+[
+  {
+    "id": "academic",
+    "category": "Academic paragraph",
+    "settings": { "tone": "academic" },
+    "text": "It is important to note that the findings of this study underscore the pivotal role of sleep in cognitive performance. Participants who slept fewer than six hours exhibited a 23% reduction in working-memory accuracy. Furthermore, these results suggest that chronic sleep restriction may have cumulative effects, although further research is needed to establish causality.",
+    "reference": "The findings indicate that sleep plays an important part in cognitive performance. Participants who slept fewer than six hours showed a 23% reduction in working-memory accuracy. The results also suggest that chronic sleep restriction may have cumulative effects, although further research is needed to establish causality."
+  },
+  {
+    "id": "formal",
+    "category": "Highly formal writing",
+    "settings": { "tone": "formal" },
+    "text": "In accordance with the provisions set forth herein, the undersigned party shall endeavour to furnish all requisite documentation no later than the fifteenth day of the month subsequent to the execution of this agreement. Failure to comply with the aforementioned obligation may result in the imposition of penalties.",
+    "reference": "Under these provisions, the undersigned party shall provide all required documentation by the fifteenth day of the month following the signing of this agreement. Failure to meet this obligation may result in penalties."
+  },
+  {
+    "id": "casual",
+    "category": "Casual writing",
+    "settings": { "tone": "casual" },
+    "text": "So yesterday I finally tried that new ramen place downtown. Honestly the broth was amazing but the noodles were kind of overcooked? Also it took like 40 minutes to get a table which was annoying. I'd probably go back though, mostly for the broth.",
+    "reference": "I finally tried that new ramen place downtown yesterday. The broth was amazing, but the noodles were a bit overcooked, and it took about 40 minutes to get a table, which was annoying. I'd probably still go back, mostly for the broth."
+  },
+  {
+    "id": "technical",
+    "category": "Technical writing",
+    "settings": { "tone": "clear" },
+    "text": "In order to utilize the caching layer, developers must configure the TTL parameter in config.yaml. The default value is 300 seconds. If the Redis instance becomes unavailable, the service will fall back to an in-memory LRU cache with a capacity of 10,000 entries.",
+    "reference": "To use the caching layer, set the TTL parameter in config.yaml. It defaults to 300 seconds. If the Redis instance becomes unavailable, the service falls back to an in-memory LRU cache that holds 10,000 entries."
+  },
+  {
+    "id": "email",
+    "category": "Professional email",
+    "settings": { "tone": "professional", "preserveParagraphs": true },
+    "text": "Hi Sarah,\n\nI hope this email finds you well. I am writing to inform you that the quarterly review meeting has been rescheduled to Thursday, 14 March at 2:30 pm. Please do not hesitate to reach out should you have any questions or concerns.\n\nBest regards,\nTom",
+    "reference": "Hi Sarah,\n\nQuick update: the quarterly review meeting has moved to Thursday, 14 March at 2:30 pm. Let me know if you have any questions.\n\nBest regards,\nTom"
+  },
+  {
+    "id": "argumentative",
+    "category": "Argumentative writing",
+    "settings": { "tone": "analytical" },
+    "text": "Some critics argue that a four-day working week would reduce productivity. However, trials in several countries have found that output remained stable while employee wellbeing improved. Nevertheless, these trials mostly involved office-based firms, so the results may not generalise to manufacturing or healthcare.",
+    "reference": "Some critics argue that a four-day working week would reduce productivity. Yet trials in several countries found that output held steady while employee wellbeing improved. Those trials mostly involved office-based firms, though, so the results may not generalise to manufacturing or healthcare."
+  },
+  {
+    "id": "persuasive",
+    "category": "Persuasive writing",
+    "settings": { "tone": "persuasive" },
+    "text": "Investing in public libraries is crucial. Libraries provide free access to information, which plays a vital role in fostering education. Moreover, they serve as community hubs. In today's fast-paced digital world, libraries are more important than ever.",
+    "reference": "Public libraries deserve investment. They give everyone free access to information, which supports education, and they act as community hubs. As more of life moves online, they matter more than ever."
+  },
+  {
+    "id": "long-sentences",
+    "category": "Long sentences",
+    "settings": { "intensity": "deep" },
+    "text": "The committee, having reviewed the evidence submitted by both parties over the course of the three-month consultation period, and having taken into account the concerns raised by local residents regarding traffic, noise and the potential impact on the nearby nature reserve, concluded that the proposal should be approved subject to a number of conditions, including restrictions on construction hours and a requirement for an independent environmental assessment.",
+    "reference": "The committee reviewed the evidence from both parties during the three-month consultation period. It also considered local residents' concerns about traffic, noise and the possible impact on the nearby nature reserve. It concluded that the proposal should be approved, subject to several conditions, including restrictions on construction hours and an independent environmental assessment."
+  },
+  {
+    "id": "short-sentences",
+    "category": "Short sentences",
+    "settings": {},
+    "text": "The product launched in May. Sales were slow. The team changed the price. Sales improved. Customers liked the new design. Returns fell by 8%. The team was pleased.",
+    "reference": "The product launched in May, and sales were slow at first. After the team changed the price, sales improved. Customers liked the new design, and returns fell by 8%, which pleased the team."
+  },
+  {
+    "id": "repetitive",
+    "category": "Repetitive paragraph",
+    "settings": {},
+    "text": "The new policy is designed to improve efficiency. The new policy will reduce paperwork. The new policy will also make approvals faster. The new policy has been welcomed by most staff.",
+    "reference": "The new policy is designed to improve efficiency: it will reduce paperwork and speed up approvals. Most staff have welcomed it."
+  },
+  {
+    "id": "statistics",
+    "category": "Statistics",
+    "settings": {},
+    "text": "According to the survey, 62% of respondents used public transport at least once a week, compared with 48% in 2019. Among those aged 18 to 24, the figure rose to 71%. The average commute time was 34 minutes.",
+    "reference": "According to the survey, 62% of respondents used public transport at least once a week, up from 48% in 2019. Among 18- to 24-year-olds the figure was 71%. The average commute took 34 minutes."
+  },
+  {
+    "id": "terminology",
+    "category": "Technical terminology",
+    "settings": { "preserveTerminology": true },
+    "text": "The model was fine-tuned using LoRA adapters on a dataset of 50,000 labelled examples. We report macro-averaged F1 scores and use a held-out test set to avoid data leakage. The baseline was a logistic regression classifier with TF-IDF features.",
+    "reference": "We fine-tuned the model with LoRA adapters on 50,000 labelled examples. We report macro-averaged F1 scores and evaluate on a held-out test set to avoid data leakage. The baseline is a logistic regression classifier with TF-IDF features."
+  },
+  {
+    "id": "quotations",
+    "category": "Quotations",
+    "settings": {},
+    "text": "During the press conference, the minister stated that \"the government will not raise income tax in this parliament.\" Critics, however, pointed out that she did not rule out increases to national insurance.",
+    "reference": "At the press conference, the minister said that \"the government will not raise income tax in this parliament.\" Critics noted, however, that she did not rule out increases to national insurance."
+  },
+  {
+    "id": "citations",
+    "category": "Citations",
+    "settings": { "tone": "academic" },
+    "text": "Previous studies have demonstrated a link between green space and mental health (Bratman et al., 2019; White & Elliott, 2020). Additionally, Kaplan (1995) proposed that natural environments help restore directed attention [4].",
+    "reference": "Earlier studies have shown a link between green space and mental health (Bratman et al., 2019; White & Elliott, 2020), and Kaplan (1995) proposed that natural environments help restore directed attention [4]."
+  },
+  {
+    "id": "conditional",
+    "category": "Conditional claims",
+    "settings": {},
+    "text": "If the temperature exceeds 40°C, the system will shut down automatically. Unless the operator resets it manually, it will remain offline. The warranty only applies if the unit was installed by a certified technician.",
+    "reference": "If the temperature goes above 40°C, the system shuts down automatically and stays offline unless the operator resets it manually. The warranty only applies if a certified technician installed the unit."
+  },
+  {
+    "id": "caveats",
+    "category": "Caveats",
+    "settings": {},
+    "text": "The supplement may help some people sleep better, but the evidence is limited and mostly comes from small studies. It is not suitable for pregnant women and may interact with certain antidepressants.",
+    "reference": "The supplement may help some people sleep better, but the evidence is limited and comes mostly from small studies. It is not suitable for pregnant women and may interact with certain antidepressants."
+  },
+  {
+    "id": "nuanced",
+    "category": "Nuanced argument",
+    "settings": { "tone": "analytical" },
+    "text": "Social media use is associated with higher rates of anxiety among teenagers, but the relationship is complex. Heavy users report more anxiety, yet it is unclear whether social media causes anxiety or whether anxious teenagers are drawn to it. Moderate use appears to have little measurable effect.",
+    "reference": "Social media use is associated with higher rates of anxiety among teenagers, but the relationship is complicated. Heavy users report more anxiety, yet it remains unclear whether social media causes the anxiety or whether anxious teenagers gravitate towards it. Moderate use appears to have little measurable effect."
+  },
+  {
+    "id": "already-natural",
+    "category": "Already natural text",
+    "settings": { "intensity": "light" },
+    "text": "I grew up in a small town on the coast. Most summers we spent on the beach, and in winter the whole place went quiet. I didn't appreciate it then, but I miss that quiet now.",
+    "reference": "I grew up in a small town on the coast. Most summers we spent on the beach, and in winter the whole place went quiet. I didn't appreciate it then, but I miss that quiet now."
+  },
+  {
+    "id": "awkward-grammar",
+    "category": "Awkward grammar",
+    "settings": {},
+    "text": "The reason why the project was delayed is because of the fact that the supplier, who they had a contract with since 2021, were not able to deliver the parts on time, which it caused problems for the whole team.",
+    "reference": "The project was delayed because the supplier, with whom they had had a contract since 2021, could not deliver the parts on time, which caused problems for the whole team."
+  },
+  {
+    "id": "complex",
+    "category": "Complex sentence structure",
+    "settings": {},
+    "text": "Although the treatment, which was administered to 120 patients over 12 weeks, did not significantly reduce symptoms overall, a subgroup analysis — which the authors caution should be interpreted carefully given its small size — indicated that patients under 30 may have benefited.",
+    "reference": "The treatment, given to 120 patients over 12 weeks, did not significantly reduce symptoms overall. However, a subgroup analysis suggested that patients under 30 may have benefited, although the authors caution that its small size means it should be interpreted carefully."
+  }
+]
